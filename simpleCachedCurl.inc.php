@@ -16,30 +16,44 @@ call this function with 2 parameters:
 returns either the raw cURL data or false if request fails and no cache is available
 
 */
-function simpleCachedCurl($url,$expires){
+function simpleCachedCurl($url,$expires,$debug){
+    if($debug){
+        echo "simpleCachedCurl debug:<br>";
+    }
     $hash = md5($url);
     $filename = dirname(__FILE__).'/cache/' . $hash . '.cache';
     $changed = filemtime($filename);
     $now = time();
-    $diff = $now - $changed;    
+    $diff = $now - $changed;   
     if ( !$changed || ($diff > $expires) ) {
-        // no cache or expired --> make new request
+        if($debug){
+            echo "no cache or expired --> make new request<br>";
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $rawData = curl_exec($ch);
         curl_close($ch);
         if(!$rawData){
-            // request failed and we have no cache --> fail
+            if($debug){
+                echo "request failed and we have no cache --> fail<br>";
+            }
             return false;
         }
-        // we got a return --> save it to cache
+        if($debug){
+            echo "we got a return --> save it to cache<br>";
+        }
         $cache = fopen($filename, 'wb');
-        fwrite($cache, serialize($rawData));
+        $write = fwrite($cache, serialize($rawData));
+        if($debug && !$write){
+            echo "writing to $filename failed. Make the folder '".dirname(__FILE__).'/cache/'."' is writeable (chmod 777)<br>";
+        }
         fclose($cache);
         return $rawData;
     }
-    // yay we hit the cache --> read it
+    if($debug){
+        echo "yay we hit the cache --> read it<br>";
+    }
     $cache = unserialize(file_get_contents($filename));
     return $cache;
 }
