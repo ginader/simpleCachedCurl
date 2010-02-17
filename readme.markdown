@@ -1,7 +1,6 @@
 PHP simple cached cURL
 ======================
-http://ginader.com
-[ginader.com](http://ginader.com/ "Developer website")
+[Dirk Ginader](http://ginader.com/)
 
 very simple wrapper for cURL that creates a local file cache
 
