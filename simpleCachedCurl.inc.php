@@ -1,6 +1,6 @@
 <?php
 /*
-simpleCachedCurl V1.0
+simpleCachedCurl V1.1
 Dirk Ginader
 ginader.com
 
@@ -9,9 +9,10 @@ code: http://github.com/ginader
 easy to use cURL wrapper with added file cache
 
 usage: created a folder named "cache" in the same folder as this file and chmod it 777
-call this function with 2 parameters:
+call this function with 3 parameters:
     $url (string) the URL of the data that you would like to load
     $expires (integer) the amound of seconds the cache should stay valid
+    $debug (boolean, optional) write debug information for troubleshooting
     
 returns either the raw cURL data or false if request fails and no cache is available
 
@@ -36,9 +37,20 @@ function simpleCachedCurl($url,$expires,$debug){
         curl_close($ch);
         if(!$rawData){
             if($debug){
-                echo "request failed and we have no cache --> fail<br>";
+                echo "cURL request failed<br>";
             }
-            return false;
+            if($changed){
+                if($debug){
+                    echo "at least we have an expired cache --> better than nothing --> read it<br>";
+                }
+                $cache = unserialize(file_get_contents($filename));
+                return $cache;
+            }else{
+                if($debug){
+                    echo "request failed and we have no cache at all --> FAIL<br>";
+                }
+                return false;
+            }
         }
         if($debug){
             echo "we got a return --> save it to cache<br>";
