@@ -14,3 +14,7 @@ call this function with 2+1 parameters:
     $debug (boolean, optional) write debug information for troubleshooting
 
 returns either the raw cURL data or false if request fails and no cache is available
+
+Requirements
+------------
+* PHP cURL (php5-curl)
