@@ -17,13 +17,15 @@ call this function with 3 parameters:
 returns either the raw cURL data or false if request fails and no cache is available
 
 */
-function simpleCachedCurl($url,$expires,$debug){
+function simpleCachedCurl($url,$expires,$debug=false){
     if($debug){
         echo "simpleCachedCurl debug:<br>";
     }
     $hash = md5($url);
     $filename = dirname(__FILE__).'/cache/' . $hash . '.cache';
-    $changed = filemtime($filename);
+    if(file_exists($filename)) {
+      $changed = filemtime($filename);
+    }
     $now = time();
     $diff = $now - $changed;   
     if ( !$changed || ($diff > $expires) ) {
