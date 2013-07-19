@@ -1,8 +1,15 @@
 <?php
 /*
 simpleCachedCurl V1.1
+
 Dirk Ginader
-ginader.com
+http://ginader.com
+
+Copyright (c) 2013 Dirk Ginader
+
+Dual licensed under the MIT and GPL licenses:
+http://www.opensource.org/licenses/mit-license.php
+http://www.gnu.org/licenses/gpl.html 
 
 code: http://github.com/ginader
 
