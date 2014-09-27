@@ -30,9 +30,7 @@ function simpleCachedCurl($url,$expires,$debug=false){
     }
     $hash = md5($url);
     $filename = dirname(__FILE__).'/cache/' . $hash . '.cache';
-    if(file_exists($filename)) {
-      $changed = filemtime($filename);
-    }
+    $changed = file_exists($filename) ? filemtime($filename) : 0;
     $now = time();
     $diff = $now - $changed;   
     if ( !$changed || ($diff > $expires) ) {
