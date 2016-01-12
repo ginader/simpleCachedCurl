@@ -19,12 +19,13 @@ usage: created a folder named "cache" in the same folder as this file and chmod 
 call this function with 3 parameters:
     $url (string) the URL of the data that you would like to load
     $expires (integer) the amound of seconds the cache should stay valid
+    $curlopt (array, optional) set multiple options for a cURL transfer http://php.net/manual/en/function.curl-setopt-array.php
     $debug (boolean, optional) write debug information for troubleshooting
     
 returns either the raw cURL data or false if request fails and no cache is available
 
 */
-function simpleCachedCurl($url,$expires,$debug=false){
+function simpleCachedCurl($url,$expires,$curlopt = array(),$debug=false){
     if($debug){
         echo "simpleCachedCurl debug:<br>";
     }
@@ -38,8 +39,13 @@ function simpleCachedCurl($url,$expires,$debug=false){
             echo "no cache or expired --> make new request<br>";
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $default_curlopt = array(
+            CURLOPT_TIMEOUT => 2,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_FOLLOWLOCATION => 1
+        );
+        $curlopt = array(CURLOPT_URL => $url) + $curlopt + $default_curlopt;
+        curl_setopt_array($ch, $curlopt);
         $rawData = curl_exec($ch);
         curl_close($ch);
         if(!$rawData){
